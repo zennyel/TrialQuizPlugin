@@ -26,6 +26,7 @@ public final class QuizPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        database.disconnect();
     }
 
     public void registerCommands(){
