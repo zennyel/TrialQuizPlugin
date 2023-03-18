@@ -1,0 +1,14 @@
+name: QuizPlugin
+version: '${project.version}'
+main: com.zennyel.QuizPlugin
+api-version: 1.19
+commands:
+  quiz:
+    description: use this command to all plugin functions!
+permissions:
+  quiz.start:
+    description: the administrator permission, player can start and close a quiz.
+  quiz.join:
+    description: the basic permission, the player can see the scoreboard and participate, leavea a quiz.
+libraries:
+  - org.mariadb.jdbc:mariadb-java-client:2.7.2

@@ -1,0 +1,9 @@
+name: QuizPlugin
+version: '1.0-SNAPSHOT'
+main: com.quizplugin.QuizPlugin
+api-version: 1.19
+commands:
+  quiz:
+    description: use this command to all plugin functions!
+libraries:
+  - org.mariadb.jdbc:mariadb-java-client:2.7.2
