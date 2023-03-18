@@ -13,27 +13,85 @@ import java.util.Map;
 
 public class QuizManager {
 
-    private Map<Player, List<String>> messages = new HashMap<>();
-    private Map<Player, Boolean> creatingQuiz = new HashMap<>();
-    private Map<Player, Boolean> isJoining = new HashMap<>();
-    private QuizPlugin instance = QuizPlugin.getPlugin(QuizPlugin.class);
-    private MariaDB database = instance.getDatabase();
-    private String awnser = null;
+    private QuizPlugin instance;
+
+    private Map<Player, List<String>> messages;
+    private Map<Player, Boolean> creatingQuiz;
+    private Map<Player, Boolean> isJoining;
+
+    private MariaDB database;
+    private Boolean onQuizEvent;
+    private Quiz quiz;
+    private String awnser;
 
 
     public QuizManager() {
+        instance = QuizPlugin.getPlugin(QuizPlugin.class);
+
+        messages = new HashMap<>();
+        creatingQuiz = new HashMap<>();
+        isJoining = new HashMap<>();
+        onQuizEvent = false;
+
+        awnser = null;
+        database = instance.getDatabase();
+
     }
 
+    public QuizPlugin getInstance() {
+        return instance;
+    }
+
+    public void setInstance(QuizPlugin instance) {
+        this.instance = instance;
+    }
+
+    public Map<Player, List<String>> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Map<Player, List<String>> messages) {
+        this.messages = messages;
+    }
+
+    public Map<Player, Boolean> getCreatingQuiz() {
+        return creatingQuiz;
+    }
+
+    public void setCreatingQuiz(Map<Player, Boolean> creatingQuiz) {
+        this.creatingQuiz = creatingQuiz;
+    }
+
+    public void setIsJoining(Map<Player, Boolean> isJoining) {
+        this.isJoining = isJoining;
+    }
+
+    public MariaDB getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(MariaDB database) {
+        this.database = database;
+    }
+
+    public Boolean getOnQuizEvent() {
+        return onQuizEvent;
+    }
+
+    public void setOnQuizEvent(Boolean onQuizEvent) {
+        this.onQuizEvent = onQuizEvent;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
 
     public void setAwnser(String awnser) {
         this.awnser = awnser;
-    }
-
-    public void closeQuiz(){
-        for(Player p: Bukkit.getOnlinePlayers()){
-            setJoining(p, false);
-            instance.setOnQuizEvent(false);
-        }
     }
 
     public void updatePoints(Player player){
@@ -48,8 +106,9 @@ public class QuizManager {
             setCreatingQuiz(p, false);
             messages.put(p, null);
         }
+        setOnQuizEvent(false);
+        quiz = null;
         awnser = null;
-        closeQuiz();
     }
 
     public void setWinner(Player player){

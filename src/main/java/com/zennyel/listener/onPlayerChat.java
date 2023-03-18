@@ -1,6 +1,7 @@
 package com.zennyel.listener;
 
 import com.zennyel.QuizPlugin;
+import com.zennyel.event.QuizEvent;
 import com.zennyel.quiz.Quiz;
 import com.zennyel.quiz.QuizManager;
 import org.bukkit.Bukkit;
@@ -34,6 +35,7 @@ public class onPlayerChat implements Listener {
                     return;
                 }
                 if(e.getMessage().equalsIgnoreCase("confirm")){
+                    manager.setQuiz(new Quiz(messages.get(0), messages.get(1), messages.get(2)));
                     manager.setCreatingQuiz(p, false);
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                     e.setCancelled(true);
@@ -49,20 +51,23 @@ public class onPlayerChat implements Listener {
                 String question = messages.get(1);
                 String correctAwnser = messages.get(2);
 
-                quizPlugin.setQuiz(new Quiz(category, question, correctAwnser));
+                manager.setQuiz(new Quiz(category, question, correctAwnser));
 
                 for(Player player : Bukkit.getOnlinePlayers()){
                     player.sendTitle("§5§lEVENT STARTED!", "The quiz event has been started!", 1,20, 10);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
                 }
-
-                Bukkit.broadcastMessage("                   ");
-                Bukkit.broadcastMessage("§5§l[QuizEvent] §fquiz event starting!");
-                Bukkit.broadcastMessage("§5§l[QuizEvent] §fCategory: §e§l" + category);
-                Bukkit.broadcastMessage("§5§l[QuizEvent] §fQuestion: §6§l" + question.toUpperCase());
-                Bukkit.broadcastMessage("§5§l[QuizEvent] §fuse: /quiz reply");
-                Bukkit.broadcastMessage("                   ");
-                quizPlugin.setOnQuizEvent(true);
+                String message = String.format("%s\n%s\n%s\n%s\n%s\n",
+                        "",
+                        "§5§l[QuizEvent] §fQuiz event starting!",
+                        "§5§l[QuizEvent] §fCategory: §e§l" + category,
+                        "§5§l[QuizEvent] §fQuestion: §6§l" + question.toUpperCase(),
+                        "§5§l[QuizEvent] §fuse: /quiz reply",
+                        ""
+                );
+                Bukkit.broadcastMessage(message);
+                Bukkit.getPluginManager().callEvent(new QuizEvent(manager));
+                manager.setOnQuizEvent(true);
             }
 
             switch (messages.size()) {
@@ -82,11 +87,16 @@ public class onPlayerChat implements Listener {
                     messages.add(e.getMessage());
                     manager.setAwnser(e.getMessage());
 
-                    p.sendMessage("§5§l[QuizEvent] §fYour awnser: §6§l" + e.getMessage());
-                    p.sendMessage("                                              ");
-                    p.sendMessage("§5§l[QuizEvent] §ftype > §2§l§nCONFIRM §f< to start the event!");
-                    p.sendMessage("§5§l[QuizEvent] §ftype > §4§l§nCANCEL §f< to start the event!");
-                    p.sendMessage("                                              ");
+                    String message = String.format("%s\n%s\n%s\n%s\n\n",
+                            "§5§l[QuizEvent] §fYour awnser: §6§l" + e.getMessage(),
+                            "",
+                            "§5§l[QuizEvent] §ftype > §2§lCONFIRM §f< to start the event!",
+                            "§5§l[QuizEvent] §ftype > §4§lCANCEL §f< to start the event!",
+                            ""
+                    );
+
+                    p.sendMessage(message);
+
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                 e.setCancelled(true);
                 break;
@@ -105,7 +115,7 @@ public class onPlayerChat implements Listener {
             p.sendMessage("§5§l[QuizEvent] §fYour reply: §6§l" + e.getMessage());
             if(manager.getAwnser().equalsIgnoreCase(e.getMessage())){
                 manager.setWinner(p);
-                manager.closeQuiz();
+                manager.closeEvent();
                 return;
             }
 

@@ -56,7 +56,7 @@ public class QuizCommand implements CommandExecutor {
         if(player.hasPermission("quiz.create")) {
 
             if (strings[0].equalsIgnoreCase("close")) {
-                if (!instance.getOnQuizEvent()) {
+                if (!manager.getOnQuizEvent()) {
                     player.sendMessage("                                           ");
                     player.sendMessage("§5§l[QuizEvent] §cNo event to close!");
                     player.sendMessage("                                           ");
@@ -78,7 +78,7 @@ public class QuizCommand implements CommandExecutor {
             if (player.hasPermission("quiz.create")) {
                 switch (strings[0]) {
                     case "close":
-                        if (!instance.getOnQuizEvent()) {
+                        if (!manager.getOnQuizEvent()) {
                             player.sendMessage("\n§5§l[QuizEvent] §cNo event to close!\n");
                             return false;
                         }
@@ -103,7 +103,7 @@ public class QuizCommand implements CommandExecutor {
                             return false;
                         }
 
-                        if (instance.getOnQuizEvent()) {
+                        if (manager.getOnQuizEvent()) {
                             player.sendMessage("\n§c§l[QuizEvent] Aleardy on quiz event!\n");
                             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                             return false;
@@ -116,6 +116,7 @@ public class QuizCommand implements CommandExecutor {
                         StringBuilder message = new StringBuilder();
                         message.append("\n§5§l[QuizEvent] §fCategory: §6§l").append(category).append("\n§5§l[QuizEvent] §fNow, type the question!\n");
                         player.sendMessage(message.toString());
+                        player.sendMessage("\n");
                         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                         return false;
 
@@ -127,7 +128,7 @@ public class QuizCommand implements CommandExecutor {
                         return false;
                 }
 
-                if (instance.getOnQuizEvent()) {
+                if (manager.getOnQuizEvent()) {
                     switch (strings[0]) {
                         case "reply":
                             StringBuilder replyMessage = new StringBuilder();
